@@ -3,120 +3,112 @@ package com.example.main.model
 import android.app.Application
 import android.content.Context
 import android.util.Log
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.json.Json
-import kotlin.random.Random
-
-
-// Data class representing the UI state
-@Serializable
-data class MyUiState(
-    // State Variablen
-    // Läuft das Spiel?
-    val isPlaying: Boolean = false,
-    // eingebene Zahl
-    val entry: String  = "",
-    // zu erratende Zahl
-    val numberToGuess: Int = Random.nextInt(1, 101),
-    // Aktuelle Ergebnisanzeige
-    val result: String = "",
-    // Zöhler der Versuche
-    val counter: Int = 0,
-    // richtig geraten?
-    val isCorrect: Boolean = false
-
-)
-
-@Serializable
-data class SharedUiState(
-    val clickCounter: Int = 0
-)
-
-
-
 
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
+    val snackbarHostState = SnackbarHostState()
     private val Context.dataStore by preferencesDataStore(name = "ui_state")
     private val dataStore = application.dataStore
-    private val UI_STATE_KEY = stringPreferencesKey("ui_state")
+    private val datastoreManager = DatastoreManager(dataStore)
 
-    private fun getStringRessource(resId: Int): String {
-        return getApplication<Application>().getString(resId)
-    }
+    // Persistenter State
 
-    private val _uiState = MutableStateFlow(MyUiState())
-    val uiState: StateFlow<MyUiState> get() = _uiState
+    private val _pState = MutableStateFlow(PersistantUiState())
+    val pState: StateFlow<PersistantUiState> get() = _pState
 
+    // non persistenter State
 
-    private val _sharedUiState = MutableStateFlow(SharedUiState())
-    val sharedUiState: StateFlow<SharedUiState> get() = _sharedUiState
-
+    private val _state = MutableStateFlow(UiState())
+    val state: StateFlow<UiState> get() = _state
 
 
     init {
-        // Load persisted UI state
+        // Hier können "Beobachter" auf Zustandsänderungen initialisiert werden
+        // z.B. um den UI-Zustand zu speichern oder um auf Änderungen zu reagieren
+
+        // Lade den persistenten UI-Zustand
         viewModelScope.launch {
-            getUiState().collect { persistedState ->
-                _uiState.value = persistedState
+            datastoreManager.getPersistantState().collectLatest { persistedState ->
+                _pState.value = persistedState
             }
-            Log.i(">>>>>", "loading Preferences: ${_uiState.value}")
+            Log.i(">>>>>", "loading Preferences: ${_pState.value}")
+        }
+
+
+        // Überwache den persistant state und speichere ihn bei Änderungen
+        viewModelScope.launch {
+            _pState.collectLatest {
+                val pState = _pState.value
+                datastoreManager.savePersitantState(pState)
+            }
+        }
+
+        // Überwache den state und triggere Aktionen bei bestimmeten Zuständen
+        // Hier als Beispiel: Wenn der Counter durch 5 teilbar ist, zeige eine Snackbar
+
+        viewModelScope.launch {
+            _state.collectLatest {
+                val counter = _state.value.clickCounter
+                if (counter % 5 == 0 && counter > 0) {
+                    showSnackbar("Counter ist durch 5 teilbar")
+                }
+            }
         }
     }
 
 
     // Actions
+    // ------------------------------------------------------------------------------
 
     fun incrementClickCounter() {
-        val currentClickCounter = _sharedUiState.value.clickCounter
-        _sharedUiState.value = _sharedUiState.value.copy(clickCounter = currentClickCounter + 1)
+        val currentClickCounter = _state.value.clickCounter
+        _state.value = _state.value.copy(clickCounter = currentClickCounter + 1)
     }
+
+    // Setze den Namen im persistanten State
+
+    fun onNameChange(name: String) {
+        _pState.value = _pState.value.copy(name = name)
+    }
+
+
+
+    // Ab hier Helper Funktionen
+    // ------------------------------------------------------------------------------
 
 
     // Snackbar
     // ------------------------------------------------------------------------------
-    val snackbarHostState = SnackbarHostState()
 
-    fun showSnackbar(message: String) {
+    fun showSnackbar(
+        message: String,
+        actionLabel: String? = null,
+        duration: SnackbarDuration = SnackbarDuration.Short
+    ) {
         viewModelScope.launch {
-            snackbarHostState.showSnackbar(message)
+            snackbarHostState.showSnackbar(
+                message = message,
+                actionLabel = actionLabel,
+                duration = duration
+            )
         }
     }
 
 
-    // Funktionen, um den UI-Zustand persistent zu speichern und wiederherzustellen
+
+    // Zugriff auf String Ressourcen
     // ------------------------------------------------------------------------------
-
-    private fun getUiState(): Flow<MyUiState> =
-        dataStore.data.map { preferences ->
-            preferences[UI_STATE_KEY]?.let { jsonString ->
-                try {
-                    Json.decodeFromString(MyUiState.serializer(), jsonString)
-                } catch (e: Exception) {
-                    MyUiState() // Fallback if parsing fails
-                }
-            } ?: MyUiState() // Default if no value stored
-        }
-
-
-    private fun saveUiState() {
-        val state = _uiState.value
-        viewModelScope.launch {
-            dataStore.edit { preferences ->
-                preferences[UI_STATE_KEY] = Json.encodeToString(MyUiState.serializer(), state)
-            }
-        }
+    private fun getStringRessource(resId: Int): String {
+        return getApplication<Application>().getString(resId)
     }
 }

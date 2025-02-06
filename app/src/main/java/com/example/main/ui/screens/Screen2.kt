@@ -24,8 +24,8 @@ fun Screen2(
     viewModel: MainViewModel,
     navController: NavController
 ) {
-    val sharedUiState by viewModel.sharedUiState.collectAsState()
-    val clickCounter = sharedUiState.clickCounter
+    val state by viewModel.state.collectAsState()
+    val clickCounter = state.clickCounter
 
     Column(
         modifier = Modifier.fillMaxSize(),

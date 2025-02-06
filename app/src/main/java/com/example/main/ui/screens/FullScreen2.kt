@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,7 +30,14 @@ fun FullScreen2(
     ) {
         Text("Full Screen 2", fontSize =  24.sp)
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { navController.navigate(MyScreens.Main.route) }) {
+        Button(onClick = {
+            viewModel.showSnackbar(
+                message = "Going back to home screen",
+                actionLabel = "OK",
+                duration = SnackbarDuration.Indefinite
+            )
+            navController.navigate(MyScreens.Main.route)
+        }) {
             Text("go back to home screen")
         }
     }
