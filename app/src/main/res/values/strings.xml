@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">MultiScreenNavTemplate</string>
+    <string name="mainScreenTitle">Home</string>
+    <string name="mainScreenLabel">Home</string>
+    <string name="screen2Title">Screen2</string>
+    <string name="screen2Label">screen2</string>
+    <string name="screen3Title">Screen 3</string>
+    <string name="screen3Label">screen3</string>
+    <string name="FullScreen1Title">Fullscreen 1</string>
+    <string name="FullScreen2Title">Fullscreen2</string>
+    <string name="menuItem1">Menu Item 1</string>
+    <string name="menuItem2">Menu Item 2</string>
+    <string name="menuItem3">Info</string>
+</resources>
