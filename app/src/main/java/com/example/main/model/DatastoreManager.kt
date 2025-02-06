@@ -6,25 +6,9 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
-
-// Datenklassen für den UI-Zustand
-// ----------------------------------------------------------------
-
-@Serializable
-data class PersistantUiState(
-    val name: String = ""
-)
-
-data class UiState(
-    val clickCounter: Int = 0
-)
-
-
-
-// Repository für den Zugriff auf den DataStore
+// Repository für den Zugriff auf den DataStore;
 // ----------------------------------------------------------------
 
 class DatastoreManager(private val dataStore: DataStore<Preferences>) {
