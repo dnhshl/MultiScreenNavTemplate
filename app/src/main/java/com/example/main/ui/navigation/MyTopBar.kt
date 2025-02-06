@@ -16,26 +16,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.main.ui.screens.MyScreens
+import com.example.main.ui.screens.SHOW_MENU
 
-// Show the menu icon in the top bar
-const val SHOW_MENU: Boolean = false
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyTopBar(
     navController: NavController,
-    screens: List<MyScreens>,
     onMenuClick: () -> Unit,
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
-    val currentRoute = currentDestination?.route
+    val currentRoute = currentDestination?.route ?: ""
 
-    val currentScreen = screens.firstOrNull { it.route == currentRoute }
-
+    val currentScreen = MyScreens.fromRoute(currentRoute)
     var screenTitle = ""
     currentScreen?.let { screenTitle = stringResource(id = it.titleID) }
-
 
 
     TopAppBar(

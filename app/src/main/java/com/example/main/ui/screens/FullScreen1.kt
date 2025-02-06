@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.main.model.MainViewModel
-import com.example.main.ui.navigation.MyScreens
 
 
 @Composable

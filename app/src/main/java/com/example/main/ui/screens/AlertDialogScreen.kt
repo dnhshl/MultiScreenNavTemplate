@@ -1,5 +1,6 @@
 package com.example.main.ui.screens
 
+import android.util.Log
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -16,14 +17,24 @@ fun AlertDialogScreen(
     AlertDialog(
         title = { Text("Info!") },
         text = { Text("Löschen oder nicht löschen, das ist hier die Frage.") },
-        onDismissRequest = { navController.popBackStack() },
+        onDismissRequest = {
+            navController.popBackStack()
+        },
         confirmButton = {
-            TextButton( onClick = { navController.popBackStack() } ) {
+            TextButton(
+                onClick = {
+                    viewModel.showSnackbar("You confirmed the dialog")
+                    navController.popBackStack()
+                }) {
                 Text("Confirm")
             }
         },
         dismissButton = {
-            TextButton( onClick = { navController.popBackStack() } ) {
+            TextButton(
+                onClick = {
+                    viewModel.showSnackbar("You dismissed the dialog")
+                    navController.popBackStack()
+                }) {
                 Text("Dismiss")
             }
         }

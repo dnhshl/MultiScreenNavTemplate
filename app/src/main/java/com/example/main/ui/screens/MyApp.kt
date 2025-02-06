@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -14,17 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.dialog
-import androidx.navigation.compose.composable
 import com.example.main.model.MainViewModel
 import com.example.main.ui.navigation.MyMenu
 import com.example.main.ui.navigation.MyNavBar
-import com.example.main.ui.navigation.MyScreens
+import com.example.main.ui.navigation.MyNavHost
 import com.example.main.ui.navigation.MyTopBar
-import com.example.main.ui.navigation.bottomBarScreenList
-import com.example.main.ui.navigation.dialogScreenList
-import com.example.main.ui.navigation.screenList
+
+
+// Show the menu icon in the top bar
+const val SHOW_MENU: Boolean = true
 
 @Composable
 fun MyApp() {
@@ -44,7 +41,6 @@ fun MyApp() {
         topBar = {
             MyTopBar(
                 navController = navController,
-                screens = screenList,
                 onMenuClick = { showMenu = !showMenu },
             )
         },
@@ -52,31 +48,17 @@ fun MyApp() {
             if (bottomBarScreenList.any { it.route == currentRoute }) {
                 MyNavBar(
                     navController = navController,
-                    screens = bottomBarScreenList
+                    screens = MyScreens.bottomBarScreens
                 )
             }
         }
     ) { paddingValues ->
-        NavHost(
+        MyNavHost(
             navController = navController,
+            viewModel = viewModel,
             startDestination = MyScreens.Main.route,
-            modifier = Modifier
-                .padding(paddingValues)
-        ) {
-            // Screens via BottomBar und Fullscreens
-            screenList.forEach { screen ->
-                composable(screen.route) {
-                    screen.content(viewModel, navController)
-                }
-            }
-            // Dialog Screens
-            dialogScreenList.forEach { screen ->
-                dialog(screen.route) {
-                    screen.content(viewModel, navController)
-                }
-            }
-        }
-
+            modifier = Modifier.padding(paddingValues)
+        )
 
         MyMenu(
             showMenu = showMenu,

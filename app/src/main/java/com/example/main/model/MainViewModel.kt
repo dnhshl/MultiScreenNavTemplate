@@ -95,6 +95,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
         actionLabel: String? = null,
         duration: SnackbarDuration = SnackbarDuration.Short
     ) {
+        Log.i(">>>>>", "showSnackbar: $message")
         viewModelScope.launch {
             snackbarHostState.showSnackbar(
                 message = message,

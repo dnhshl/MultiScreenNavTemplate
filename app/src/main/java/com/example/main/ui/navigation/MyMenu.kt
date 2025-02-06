@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.example.main.R
+import com.example.main.ui.screens.MyScreens
 
 @Composable
 fun MyMenu(showMenu: Boolean = false,

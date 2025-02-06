@@ -11,4 +11,5 @@
     <string name="menuItem1">Menu Item 1</string>
     <string name="menuItem2">Menu Item 2</string>
     <string name="menuItem3">Info</string>
+    <string name="emptyString" />
 </resources>
