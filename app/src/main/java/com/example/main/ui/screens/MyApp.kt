@@ -18,6 +18,7 @@ import com.example.main.ui.navigation.MyMenu
 import com.example.main.ui.navigation.MyNavBar
 import com.example.main.ui.navigation.MyNavHost
 import com.example.main.ui.navigation.MyTopBar
+import com.example.main.ui.screens.MyScreens.Companion.bottomBarScreens
 
 
 // Show the menu icon in the top bar
@@ -45,7 +46,7 @@ fun MyApp() {
             )
         },
         bottomBar = {
-            if (bottomBarScreenList.any { it.route == currentRoute }) {
+            if (bottomBarScreens.any { it.route == currentRoute }) {
                 MyNavBar(
                     navController = navController,
                     screens = MyScreens.bottomBarScreens

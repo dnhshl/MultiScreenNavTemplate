@@ -33,7 +33,6 @@ sealed class MyScreens(
         labelID = R.string.mainScreenLabel,      // Label in der BottomBar
         selectedIcon = Icons.Filled.Home,        // Icon in der BottomBar, wenn gewählt
         unselectedIcon =Icons.Outlined.Home,     // Icon in der BottomBar, wenn nicht gewählt
-
     )
 
     object Screen2 : MyScreens(
@@ -94,15 +93,6 @@ sealed class MyScreens(
     }
 
 }
-
-
-// Hier alle Bildschirme listen, über die in der Bottom Bar navigiert werden soll
-// Die Reihenfolge bestimmt die Reihenfolge in der Bottom Bar
-val bottomBarScreenList = listOf (
-    MyScreens.Main,
-    MyScreens.Screen2,
-    MyScreens.Screen3,
-)
 
 
 
