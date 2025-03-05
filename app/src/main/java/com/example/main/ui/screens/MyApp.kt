@@ -57,7 +57,7 @@ fun MyApp() {
         MyNavHost(
             navController = navController,
             viewModel = viewModel,
-            startDestination = MyScreens.Main.route,
+            startDestination = MyScreens.startScreen.route,
             modifier = Modifier.padding(paddingValues)
         )
 

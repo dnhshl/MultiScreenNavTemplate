@@ -11,13 +11,14 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+private val Context.dataStore by preferencesDataStore(name = "ui_state")
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     val snackbarHostState = SnackbarHostState()
-    private val Context.dataStore by preferencesDataStore(name = "ui_state")
     private val dataStore = application.dataStore
     private val datastoreManager = DatastoreManager(dataStore)
 
@@ -72,13 +73,13 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
     fun incrementClickCounter() {
         val currentClickCounter = _state.value.clickCounter
-        _state.value = _state.value.copy(clickCounter = currentClickCounter + 1)
+        _state.update { it.copy(clickCounter = currentClickCounter + 1) }
     }
 
     // Setze den Namen im persistanten State
 
     fun onNameChange(name: String) {
-        _pState.value = _pState.value.copy(name = name)
+        _pState.update { it.copy(name = name) }
     }
 
 

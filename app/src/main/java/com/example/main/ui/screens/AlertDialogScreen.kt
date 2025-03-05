@@ -1,6 +1,5 @@
 package com.example.main.ui.screens
 
-import android.util.Log
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton

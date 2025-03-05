@@ -88,6 +88,8 @@ sealed class MyScreens(
 
         val bottomBarScreens = listOf(Main, Screen2, Screen3)
 
+        val startScreen = Main
+
         fun fromRoute(route: String): MyScreens? =
             allScreens.firstOrNull { it.route == route }
     }

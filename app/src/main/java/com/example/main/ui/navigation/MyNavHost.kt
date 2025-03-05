@@ -33,7 +33,7 @@ fun MyNavHost(
         composable(MyScreens.Screen2.route) { Screen2(viewModel, navController) }
         composable(MyScreens.Screen3.route) { Screen3(viewModel, navController) }
         composable(MyScreens.FullScreen1.route) { FullScreen1(viewModel, navController) }
-        composable(MyScreens.FullScreen1.route) { FullScreen2(viewModel, navController) }
+        composable(MyScreens.FullScreen2.route) { FullScreen2(viewModel, navController) }
 
         // Dialog Screens
         dialog(MyScreens.AlertDialog.route) { AlertDialogScreen(viewModel, navController) }
