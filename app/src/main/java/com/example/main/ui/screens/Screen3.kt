@@ -17,12 +17,17 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.main.model.MainViewModel
 
+/*
+Screen3 demonstriert die Interaktion mit dem persistenten Zustand (pState).
+Änderungen, die hier gemacht werden (z.B. die Eingabe eines Namens), bleiben
+auch nach dem Neustart der App erhalten, da sie im DataStore gespeichert werden.
+*/
 @Composable
 fun Screen3(viewModel: MainViewModel, navController: NavController) {
 
+    // Hier wird der persistente Zustand (pState) vom ViewModel abonniert.
     val pstate by viewModel.pState.collectAsState()
     val name = pstate.name
-
 
 
     Column(
@@ -32,11 +37,17 @@ fun Screen3(viewModel: MainViewModel, navController: NavController) {
     ) {
         Text("Hallo Screen 3", fontSize =  24.sp)
         Spacer(modifier = Modifier.size(16.dp))
+
+        // TextField ist ein Eingabefeld.
         TextField(
-            value = name,
-            label = { Text("Name") },
-            onValueChange = { viewModel.onNameChange(it) },
-            singleLine = true
+            value = name, // Der aktuelle Wert des Feldes wird aus dem pState geholt.
+            label = { Text("Name") }, // Die Beschriftung des Feldes.
+            // onValueChange wird bei jeder Eingabe aufgerufen.
+            onValueChange = {
+                // Die onNameChange-Funktion im ViewModel wird aufgerufen, um den Zustand zu aktualisieren.
+                viewModel.onNameChange(it)
+            },
+            singleLine = true // Sorgt dafür, dass das Eingabefeld nur eine Zeile hat.
         )
 
     }

@@ -18,23 +18,39 @@ import androidx.navigation.NavController
 import com.example.main.model.MainViewModel
 
 
+/*
+MainScreen ist ein Beispiel für einen Screen in der App.
+Jeder Screen ist eine Composable-Funktion, die die UI für diesen bestimmten Bildschirm darstellt.
+Er erhält das ViewModel und den NavController als Parameter, um auf die App-Logik und
+die Navigation zugreifen zu können.
+*/
 @Composable
 fun MainScreen(
     viewModel: MainViewModel,
     navController: NavController,
 ) {
+    // `collectAsState()` sammelt Werte aus dem StateFlow des ViewModels und wandelt sie in einen
+    // Compose-State um. Immer wenn sich der Wert im StateFlow ändert, wird diese Composable
+    // automatisch neu komponiert (neu gezeichnet), um die UI zu aktualisieren.
     val state by viewModel.state.collectAsState()
     val clickCounter = state.clickCounter
 
+    // Column ist ein Layout-Composable, das seine Kinder vertikal anordnet.
     Column(
-        modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.fillMaxSize(), // Füllt die gesamte verfügbare Größe aus.
+        verticalArrangement = Arrangement.Center, // Zentriert die Kinder vertikal.
+        horizontalAlignment = Alignment.CenterHorizontally // Zentriert die Kinder horizontal.
     ) {
+        // Zeigt den aktuellen Wert des Klickzählers an.
         Text(clickCounter.toString(), fontSize =  24.sp)
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp)) // Fügt einen leeren Raum hinzu.
+
+        // Ein einfacher Button.
         Button(onClick = {
+            // Bei einem Klick wird die entsprechende Funktion im ViewModel aufgerufen.
+            // Das ViewModel kümmert sich dann um die Logik (hier: das Erhöhen des Zählers).
             viewModel.incrementClickCounter()
+            // Hier könnte man z.B. auch eine Snackbar anzeigen.
             //viewModel.showSnackbar("You clicked again!", duration = SnackbarDuration.Indefinite)
         }) {
             Text("Klick mich")
@@ -42,7 +58,12 @@ fun MainScreen(
         Spacer(modifier = Modifier.height(40.dp))
         Text("Welcome to Home Screen", fontSize =  24.sp)
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = { navController.navigate(MyScreens.FullScreen1.route)}) {
+
+        // Button, um zu einem anderen Screen zu navigieren.
+        Button(onClick = {
+            // `navController.navigate()` wird aufgerufen, um zu der angegebenen Route zu navigieren.
+            navController.navigate(MyScreens.FullScreen1.route)
+        }) {
             Text("Go to full screen 1")
         }
     }
